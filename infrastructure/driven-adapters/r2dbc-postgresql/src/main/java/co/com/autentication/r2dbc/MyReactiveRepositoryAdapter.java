@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 public class MyReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     User/* change for domain model */,
         UserEntity/* change for adapter model */,
-    String,
+    Long,
     MyReactiveRepository
 > implements UserRepository {
     public MyReactiveRepositoryAdapter(MyReactiveRepository repository, ObjectMapper mapper) {

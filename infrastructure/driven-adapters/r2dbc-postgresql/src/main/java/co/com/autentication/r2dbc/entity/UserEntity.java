@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table(name = "user")
+@Table(name = "usuario")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -13,19 +13,20 @@ import org.springframework.data.relational.core.mapping.Table;
 @Builder
 public class UserEntity {
     @Id
-    @Column("id_user")
+    @Column("id_usuario")
     private Long idUser;
-    @Column("first_name")
+    @Column("nombre")
     private String firstName;
-    @Column("last_name")
+    @Column("apellido")
     private String lastName;
-    @Column("birth_date")
-    private String birthDate;
-    @Column("address")
+//    @Column("birth_date")
+//    private String birthDate;
+    @Column("direccion")
     private String address;
-    @Column("phone")
+    @Column("telefono")
     private String phone;
+    @Column("email")
     private String email;
-    @Column("salaty_base")
+    @Column("salario_base")
     private Long salaryBase;
 }

@@ -1,7 +1,8 @@
 package co.com.autentication.api;
 
 import co.com.autentication.api.dto.CreateUserDto;
-import co.com.autentication.usecase.user.UserUseCase;
+import co.com.autentication.api.helper.IUserRequestMapper;
+import co.com.autentication.usecase.user.api.IUserServicePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -12,19 +13,21 @@ import reactor.core.publisher.Mono;
 @Component
 @RequiredArgsConstructor
 public class Handler {
-    private final UserUseCase userUseCase;
-//private  final UseCase2 useCase2;
-
+    private final IUserServicePort userServicePort;
+    private final IUserRequestMapper userRequestMapper;
     public Mono<ServerResponse> listenGETUseCase(ServerRequest serverRequest) {
+        return ServerResponse.ok().bodyValue("");
+    }
+
+    public Mono<ServerResponse> saveUser(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(CreateUserDto.class)
-                .flatMap(userUseCase::saveUser)
-                .flatMap(response ->ServerResponse.ok()
+                .flatMap(dto -> userServicePort.saveUser(userRequestMapper.toModel(dto)))
+                .then(ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(response));
+                        .bodyValue(""));
     }
 
     public Mono<ServerResponse> listenGETUseCase2(ServerRequest serverRequest) {
-        userUseCase.saveUser(serverRequest);
         return ServerResponse.ok().bodyValue("");
     }
 

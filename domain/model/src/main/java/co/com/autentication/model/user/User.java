@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class User {
-    private String idUser;
+    private Long idUser;
     private String firstName;
     private String lastName;
     private String dateBirthday;
