@@ -13,7 +13,7 @@ public class MyReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     User/* change for domain model */,
         UserEntity/* change for adapter model */,
     Long,
-    MyReactiveRepository
+        MyReactiveRepository
 > implements UserRepository {
     public MyReactiveRepositoryAdapter(MyReactiveRepository repository, ObjectMapper mapper) {
         /**
@@ -29,5 +29,11 @@ public class MyReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         UserEntity userEntity = mapper.map(user, UserEntity.class);
         return repository.save(userEntity)
                 .map(e ->mapper.map(e, User.class));
+    }
+
+    @Override
+    public Mono<User> findByEmail(String email) {
+        return repository.findByEmail(email)
+                .map(e -> mapper.map(e, User.class));
     }
 }

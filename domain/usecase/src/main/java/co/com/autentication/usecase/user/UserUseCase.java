@@ -11,6 +11,9 @@ public class UserUseCase implements IUserServicePort {
     private final UserRepository userRepository;
 
     public Mono<Void> saveUser(User user) {
-        return userRepository.save(user).then();
+        return userRepository.findByEmail(user.getEmail())
+                .flatMap(existingUser -> Mono.error(new RuntimeException("Usuario ya existe")))
+                .switchIfEmpty(userRepository.save(user))
+                .then();
     }
 }

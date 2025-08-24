@@ -1,8 +1,11 @@
 package co.com.autentication.api;
 
 import co.com.autentication.api.dto.CreateUserDto;
+import co.com.autentication.api.exception.ValidatorHandler;
+import co.com.autentication.api.exceptionhandler.ControllerAdvisor;
 import co.com.autentication.api.helper.IUserRequestMapper;
 import co.com.autentication.usecase.user.api.IUserServicePort;
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -15,16 +18,22 @@ import reactor.core.publisher.Mono;
 public class Handler {
     private final IUserServicePort userServicePort;
     private final IUserRequestMapper userRequestMapper;
+    private final ValidatorHandler validatorHandler;
+    private final ControllerAdvisor controllerAdvisor;
+
     public Mono<ServerResponse> listenGETUseCase(ServerRequest serverRequest) {
         return ServerResponse.ok().bodyValue("");
     }
 
     public Mono<ServerResponse> saveUser(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(CreateUserDto.class)
+                .map(validatorHandler::validate)
                 .flatMap(dto -> userServicePort.saveUser(userRequestMapper.toModel(dto)))
                 .then(ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(""));
+                        .bodyValue(""))
+                .onErrorResume(ConstraintViolationException.class,
+                        controllerAdvisor::handleConstraintViolation);
     }
 
     public Mono<ServerResponse> listenGETUseCase2(ServerRequest serverRequest) {

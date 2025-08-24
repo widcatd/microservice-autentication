@@ -1,6 +1,9 @@
 package co.com.autentication.model.user;
 import lombok.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 
 @Getter
 @Setter
@@ -11,9 +14,9 @@ public class User {
     private Long idUser;
     private String firstName;
     private String lastName;
-    private String dateBirthday;
-    private String direction;
+    private LocalDate dateBirthday;
+    private String address;
     private String phone;
     private String email;
-    private Long salaryBase;
+    private BigDecimal salaryBase;
 }
