@@ -6,6 +6,8 @@ import co.com.autentication.api.exceptionhandler.ControllerAdvisor;
 import co.com.autentication.api.helper.IUserRequestMapper;
 import co.com.autentication.usecase.user.api.IUserServicePort;
 import co.com.autentication.usecase.user.exception.DataAlreadyExistException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -16,6 +18,7 @@ import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
+@Tag(name = "Usuarios", description = "Operaciones sobre usuarios")
 public class Handler {
     private final IUserServicePort userServicePort;
     private final IUserRequestMapper userRequestMapper;
@@ -25,7 +28,7 @@ public class Handler {
     public Mono<ServerResponse> listenGETUseCase(ServerRequest serverRequest) {
         return ServerResponse.ok().bodyValue("");
     }
-
+    @Operation(summary = "Crear un usuario")
     public Mono<ServerResponse> saveUser(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(CreateUserDto.class)
                 .map(validatorHandler::validate)
