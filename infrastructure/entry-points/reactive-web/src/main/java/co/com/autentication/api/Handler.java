@@ -5,6 +5,7 @@ import co.com.autentication.api.exception.ValidatorHandler;
 import co.com.autentication.api.exceptionhandler.ControllerAdvisor;
 import co.com.autentication.api.helper.IUserRequestMapper;
 import co.com.autentication.usecase.user.api.IUserServicePort;
+import co.com.autentication.usecase.user.exception.DataAlreadyExistException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -33,7 +34,9 @@ public class Handler {
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(""))
                 .onErrorResume(ConstraintViolationException.class,
-                        controllerAdvisor::handleConstraintViolation);
+                        controllerAdvisor::handleConstraintViolation)
+                .onErrorResume(DataAlreadyExistException.class, ex ->
+                        controllerAdvisor.handleDataAlreadyExistsException(ex, serverRequest));
     }
 
     public Mono<ServerResponse> listenGETUseCase2(ServerRequest serverRequest) {
