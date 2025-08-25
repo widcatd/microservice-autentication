@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Table(name = "usuario")
@@ -30,5 +31,5 @@ public class UserEntity {
     @Column("email")
     private String email;
     @Column("salario_base")
-    private Long salaryBase;
+    private BigDecimal salaryBase;
 }

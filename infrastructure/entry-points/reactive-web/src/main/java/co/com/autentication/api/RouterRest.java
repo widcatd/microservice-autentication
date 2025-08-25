@@ -1,6 +1,10 @@
 package co.com.autentication.api;
 
+import co.com.autentication.api.dto.CreateUserDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springdoc.core.annotations.RouterOperation;
 import org.springdoc.core.annotations.RouterOperations;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +31,23 @@ public class RouterRest {
                     operation = @Operation(
                             operationId = "saveUser",
                             summary = "Crear un usuario",
-                            tags = { "Usuarios" }
+                            tags = { "Usuarios" },
+                            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                                    required = true,
+                                    description = "Datos de creación del usuario",
+                                    content = @Content(
+                                            schema = @Schema(implementation = CreateUserDto.class)
+                                    )
+                            ),
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "Usuario creado correctamente",
+                                            content = @Content(
+                                                    schema = @Schema(implementation = CreateUserDto.class)
+                                            )
+                                    ),
+                            }
                     )
             )
     })
