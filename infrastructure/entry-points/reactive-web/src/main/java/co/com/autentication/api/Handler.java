@@ -4,6 +4,7 @@ import co.com.autentication.api.dto.CreateUserDto;
 import co.com.autentication.api.exception.ValidatorHandler;
 import co.com.autentication.api.exceptionhandler.ControllerAdvisor;
 import co.com.autentication.api.helper.IUserRequestMapper;
+import co.com.autentication.api.helper.IUserResponseMapper;
 import co.com.autentication.usecase.user.api.IUserServicePort;
 import co.com.autentication.usecase.user.exception.DataAlreadyExistException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,6 +23,7 @@ import reactor.core.publisher.Mono;
 public class Handler {
     private final IUserServicePort userServicePort;
     private final IUserRequestMapper userRequestMapper;
+    private final IUserResponseMapper userResponseMapper;
     private final ValidatorHandler validatorHandler;
     private final ControllerAdvisor controllerAdvisor;
 
@@ -54,5 +56,17 @@ public class Handler {
     public Mono<ServerResponse> listenPOSTUseCase(ServerRequest serverRequest) {
         // useCase.logic();
         return ServerResponse.ok().bodyValue("");
+    }
+
+    public Mono<ServerResponse> findByDocument(ServerRequest serverRequest) {
+        String identityDocument = serverRequest.pathVariable("identityDocument");
+        return userServicePort.findByDocument(identityDocument)
+                .map(userResponseMapper::toResponse)
+                .flatMap(userResponseDto ->
+                        ServerResponse.ok()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .bodyValue(userResponseDto)
+                )
+                .switchIfEmpty(ServerResponse.notFound().build());
     }
 }

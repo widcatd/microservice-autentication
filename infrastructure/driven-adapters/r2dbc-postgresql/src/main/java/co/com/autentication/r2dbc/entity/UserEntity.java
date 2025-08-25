@@ -32,4 +32,6 @@ public class UserEntity {
     private String email;
     @Column("salario_base")
     private BigDecimal salaryBase;
+    @Column("documento_identidad")
+    private String identityDocument;
 }

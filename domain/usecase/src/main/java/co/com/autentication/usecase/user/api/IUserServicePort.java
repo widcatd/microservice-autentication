@@ -5,4 +5,5 @@ import reactor.core.publisher.Mono;
 
 public interface IUserServicePort {
     Mono<Void> saveUser(User user);
+    Mono<User> findByDocument(String identityDocument);
 }

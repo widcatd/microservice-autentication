@@ -36,4 +36,10 @@ public class MyReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         return repository.findByEmail(email)
                 .map(e -> mapper.map(e, User.class));
     }
+
+    @Override
+    public Mono<User> findByIdentityDocument(String identityDocument) {
+        return repository.findByIdentityDocument(identityDocument)
+                .map(e -> mapper.map(e, User.class));
+    }
 }

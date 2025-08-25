@@ -36,4 +36,5 @@ public class CreateUserDto {
     @DecimalMax(value = "15000000.00", message = "el valor maximo del salario base debe ser 15000000")
     @Schema(description = "Salario base", example = "2500.50")
     private BigDecimal salaryBase;
+    private String identityDocument;
 }

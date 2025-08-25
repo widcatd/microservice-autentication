@@ -20,4 +20,9 @@ public class UserUseCase implements IUserServicePort {
                 .switchIfEmpty(userRepository.save(user)))
                 .then();
     }
+
+    @Override
+    public Mono<User> findByDocument(String identityDocument) {
+        return userRepository.findByIdentityDocument(identityDocument);
+    }
 }
