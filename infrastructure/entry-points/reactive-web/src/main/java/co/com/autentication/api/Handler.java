@@ -1,12 +1,12 @@
 package co.com.autentication.api;
 
 import co.com.autentication.api.dto.CreateUserDto;
-import co.com.autentication.api.exception.ValidatorHandler;
 import co.com.autentication.api.exceptionhandler.ControllerAdvisor;
 import co.com.autentication.api.helper.IUserRequestMapper;
 import co.com.autentication.api.helper.IUserResponseMapper;
 import co.com.autentication.usecase.user.api.IUserServicePort;
 import co.com.autentication.usecase.user.exception.DataAlreadyExistException;
+import co.com.autentication.usecase.user.exception.UserValidationException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.ConstraintViolationException;
@@ -24,7 +24,6 @@ public class Handler {
     private final IUserServicePort userServicePort;
     private final IUserRequestMapper userRequestMapper;
     private final IUserResponseMapper userResponseMapper;
-    private final ValidatorHandler validatorHandler;
     private final ControllerAdvisor controllerAdvisor;
 
     public Mono<ServerResponse> listenGETUseCase(ServerRequest serverRequest) {
@@ -33,7 +32,6 @@ public class Handler {
     @Operation(summary = "Crear un usuario")
     public Mono<ServerResponse> saveUser(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(CreateUserDto.class)
-                .map(validatorHandler::validate)
                 .flatMap(dto -> userServicePort.saveUser(userRequestMapper.toModel(dto)))
                 .then(ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
@@ -41,6 +39,8 @@ public class Handler {
                 .onErrorResume(ConstraintViolationException.class,
                         controllerAdvisor::handleConstraintViolation)
                 .onErrorResume(DataAlreadyExistException.class, ex ->
+                        controllerAdvisor.handleDataAlreadyExistsException(ex, serverRequest))
+                .onErrorResume(UserValidationException.class, ex ->
                         controllerAdvisor.handleDataAlreadyExistsException(ex, serverRequest));
     }
 

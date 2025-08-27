@@ -6,9 +6,11 @@ import co.com.autentication.r2dbc.entity.UserEntity;
 import co.com.autentication.r2dbc.helper.ReactiveAdapterOperations;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 @Repository
+@Transactional
 public class MyReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     User/* change for domain model */,
         UserEntity/* change for adapter model */,
