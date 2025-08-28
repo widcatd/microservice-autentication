@@ -1,7 +1,10 @@
 package co.com.autentication.api;
 
 import co.com.autentication.api.dto.CreateUserDto;
+import co.com.autentication.api.dto.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -47,6 +50,39 @@ public class RouterRest {
                                                     schema = @Schema(implementation = CreateUserDto.class)
                                             )
                                     ),
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/api/v1/usuarios/findByDocument/{identityDocument}",
+                    produces = { MediaType.APPLICATION_JSON_VALUE },
+                    method = RequestMethod.GET,
+                    beanClass = Handler.class,
+                    beanMethod = "findByDocument",
+                    operation = @Operation(
+                            operationId = "findByDocument",
+                            summary = "Buscar un usuario por documento de identidad",
+                            tags = { "Usuarios" },
+                            parameters = {
+                                    @Parameter(
+                                            name = "identityDocument",
+                                            in = ParameterIn.PATH,
+                                            required = true,
+                                            description = "Documento de identidad del usuario"
+                                    )
+                            },
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "Usuario encontrado",
+                                            content = @Content(
+                                                    schema = @Schema(implementation = UserDto.class)
+                                            )
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "404",
+                                            description = "Usuario no encontrado"
+                                    )
                             }
                     )
             )
