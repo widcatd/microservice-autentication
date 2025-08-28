@@ -23,14 +23,13 @@ public class UserMock {
     public static User invalidUser() {
         return User.builder()
                 .idUser(2L)
-                .firstName("") // inválido
-                .lastName(null) // inválido
+                .firstName("")
                 .dateBirthday(null)
                 .address("")
                 .phone("")
-                .email("") // inválido
+                .email("")
                 .salaryBase(BigDecimal.ZERO)
-                .identityDocument(null) // inválido
+                .identityDocument(null)
                 .build();
     }
 
@@ -42,9 +41,9 @@ public class UserMock {
                 .dateBirthday(LocalDate.of(1990, 5, 20))
                 .address("Av. Siempre Viva 123")
                 .phone("987654321")
-                .email("juan.perez@mail.com") // mismo correo que validUser()
+                .email("juan.perez@mail.com")
                 .salaryBase(BigDecimal.valueOf(3500.00))
-                .identityDocument("12345678") // mismo doc que validUser()
+                .identityDocument("12345678")
                 .build();
     }
 }
