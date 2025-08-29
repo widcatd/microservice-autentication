@@ -14,7 +14,7 @@ public class UserUseCase implements IUserServicePort {
     private final UserRepository userRepository;
     private final UserValidatorUseCase userValidatorUseCase;
 
-    public Mono<Void> saveUser(User user) {
+    public Mono<Void> saveUser(User user, String traceId) {
         return userValidatorUseCase.validate(user)
                 .flatMap(validUser ->
                         userRepository.findByEmail(validUser.getEmail())
@@ -22,13 +22,13 @@ public class UserUseCase implements IUserServicePort {
                                         ExceptionUseCaseResponse.EMAIL_ALREADY_EXIST.getCode(),
                                         String.format(ExceptionUseCaseResponse.EMAIL_ALREADY_EXIST.getMessage(), existingUser.getEmail())
                                 )))
-                                .switchIfEmpty(userRepository.save(validUser))
+                                .switchIfEmpty(userRepository.save(validUser, traceId))
                 )
                 .then();
     }
 
     @Override
-    public Mono<User> findByDocument(String identityDocument) {
-        return userRepository.findByIdentityDocument(identityDocument);
+    public Mono<User> findByDocument(String identityDocument, String traceId) {
+        return userRepository.findByIdentityDocument(identityDocument, traceId);
     }
 }

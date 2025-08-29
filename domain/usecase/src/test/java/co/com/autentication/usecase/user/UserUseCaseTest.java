@@ -20,6 +20,7 @@ import static org.mockito.Mockito.*;
 
 class UserUseCaseTest {
     private static final String IDENTITY_DOCUMENT ="123456";
+    private static final String traceId= "74654859-d75f-448e-9b5e-a6ddee9f5278";
 
     @Mock
     private UserRepository userRepository;
@@ -41,14 +42,14 @@ class UserUseCaseTest {
         User user = UserMock.validUser();
         when(userValidator.validate(user)).thenReturn(Mono.just(user));
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Mono.empty());
-        when(userRepository.save(user)).thenReturn(Mono.just(user));
+        when(userRepository.save(user,traceId)).thenReturn(Mono.just(user));
 
-        Mono<Void> result = userUseCase.saveUser(user);
+        Mono<Void> result = userUseCase.saveUser(user,traceId);
 
         StepVerifier.create(result)
                 .verifyComplete();
 
-        verify(userRepository).save(user);
+        verify(userRepository).save(user,traceId);
     }
     @Test
     @DisplayName("Error al validar usuario")
@@ -60,22 +61,22 @@ class UserUseCaseTest {
                         ExceptionUseCaseResponse.VALIDATION_ERROR.getMessage()
                 )));
 
-        Mono<Void> result = userUseCase.saveUser(user);
+        Mono<Void> result = userUseCase.saveUser(user, traceId);
 
         StepVerifier.create(result)
                 .expectError(UserValidationException.class)
                 .verify();
 
-        verify(userRepository, never()).save(any());
+        verify(userRepository, never()).save(any(),traceId);
     }
     @Test
     @DisplayName("Usuario encontrado por documento")
     void findByDocument_found() {
         User user = UserMock.validUser();
-        when(userRepository.findByIdentityDocument(IDENTITY_DOCUMENT))
+        when(userRepository.findByIdentityDocument(IDENTITY_DOCUMENT,traceId))
                 .thenReturn(Mono.just(user));
 
-        Mono<User> result = userUseCase.findByDocument(IDENTITY_DOCUMENT);
+        Mono<User> result = userUseCase.findByDocument(IDENTITY_DOCUMENT, traceId);
 
         StepVerifier.create(result)
                 .expectNext(user)
@@ -85,10 +86,10 @@ class UserUseCaseTest {
     @Test
     @DisplayName("Usuario no encontrado por documento")
     void findByDocument_notFound() {
-        when(userRepository.findByIdentityDocument(IDENTITY_DOCUMENT))
+        when(userRepository.findByIdentityDocument(IDENTITY_DOCUMENT,traceId))
                 .thenReturn(Mono.empty());
 
-        Mono<User> result = userUseCase.findByDocument(IDENTITY_DOCUMENT);
+        Mono<User> result = userUseCase.findByDocument(IDENTITY_DOCUMENT, traceId);
 
         StepVerifier.create(result)
                 .verifyComplete();
