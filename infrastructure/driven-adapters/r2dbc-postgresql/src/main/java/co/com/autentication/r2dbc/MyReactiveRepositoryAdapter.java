@@ -34,9 +34,11 @@ public class MyReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         log.info(Constants.LOG_USER_REPO_START_SAVE, user.getIdentityDocument(), traceId);
         UserEntity userEntity = mapper.map(user, UserEntity.class);
         return repository.save(userEntity)
-                .doOnNext(saved ->
+                .map(e ->mapper.map(e, User.class))
+                .doOnSuccess(saved ->
                         log.info(Constants.LOG_USER_REPO_SAVED_SUCCESS, saved.getIdUser(), traceId))
-                .map(e ->mapper.map(e, User.class));
+                .doOnError(error ->
+                        log.error(Constants.LOG_USER_REPO_ERROR_SAVING, error.getMessage(), traceId, error));
     }
 
     @Override
