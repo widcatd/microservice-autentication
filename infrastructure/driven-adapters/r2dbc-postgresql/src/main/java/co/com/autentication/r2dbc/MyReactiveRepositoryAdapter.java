@@ -36,10 +36,6 @@ public class MyReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         return repository.save(userEntity)
                 .doOnNext(saved ->
                         log.info(Constants.LOG_USER_REPO_SAVED_SUCCESS, saved.getIdUser(), traceId))
-                .switchIfEmpty(Mono.defer(() -> {
-                    log.warn(Constants.LOG_USER_REPO_ERROR_SAVING, traceId);
-                    return Mono.empty();
-                }))
                 .map(e ->mapper.map(e, User.class));
     }
 
