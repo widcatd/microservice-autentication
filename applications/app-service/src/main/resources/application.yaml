@@ -30,3 +30,7 @@ adapters:
     schema: public
     username: postgres
     password: mysecretpassword
+
+jwt:
+  secret: 6b1a96e1560e4560c59fd70326cd02d5d550dd3d648aae7259ca4de77901c0bc
+  expiration: 3600000

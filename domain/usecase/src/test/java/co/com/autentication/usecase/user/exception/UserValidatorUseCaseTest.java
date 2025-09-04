@@ -2,7 +2,7 @@ package co.com.autentication.usecase.user.exception;
 
 import co.com.autentication.model.user.User;
 import co.com.autentication.usecase.user.mock.UserMock;
-import co.com.autentication.usecase.user.exceptionusecase.ExceptionUseCaseResponse;
+import co.com.autentication.model.exceptionusecase.ExceptionUseCaseResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

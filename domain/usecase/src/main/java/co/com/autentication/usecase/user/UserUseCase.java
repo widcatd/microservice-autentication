@@ -5,7 +5,7 @@ import co.com.autentication.model.user.gateways.UserRepository;
 import co.com.autentication.usecase.user.api.IUserServicePort;
 import co.com.autentication.usecase.user.exception.DataAlreadyExistException;
 import co.com.autentication.usecase.user.exception.UserValidatorUseCase;
-import co.com.autentication.usecase.user.exceptionusecase.ExceptionUseCaseResponse;
+import co.com.autentication.model.exceptionusecase.ExceptionUseCaseResponse;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
@@ -17,7 +17,7 @@ public class UserUseCase implements IUserServicePort {
     public Mono<Void> saveUser(User user, String traceId) {
         return userValidatorUseCase.validate(user)
                 .flatMap(validUser ->
-                        userRepository.findByEmail(validUser.getEmail())
+                        userRepository.findByEmail(validUser.getEmail(), traceId)
                                 .flatMap(existingUser -> Mono.error(new DataAlreadyExistException(
                                         ExceptionUseCaseResponse.EMAIL_ALREADY_EXIST.getCode(),
                                         String.format(ExceptionUseCaseResponse.EMAIL_ALREADY_EXIST.getMessage(), existingUser.getEmail())

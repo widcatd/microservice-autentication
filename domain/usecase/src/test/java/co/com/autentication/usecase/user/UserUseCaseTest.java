@@ -5,7 +5,7 @@ import co.com.autentication.model.user.gateways.UserRepository;
 import co.com.autentication.usecase.user.mock.UserMock;
 import co.com.autentication.usecase.user.exception.UserValidationException;
 import co.com.autentication.usecase.user.exception.UserValidatorUseCase;
-import co.com.autentication.usecase.user.exceptionusecase.ExceptionUseCaseResponse;
+import co.com.autentication.model.exceptionusecase.ExceptionUseCaseResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ class UserUseCaseTest {
     void saveUser_successful() {
         User user = UserMock.validUser();
         when(userValidator.validate(user)).thenReturn(Mono.just(user));
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Mono.empty());
+        when(userRepository.findByEmail(user.getEmail(),traceId)).thenReturn(Mono.empty());
         when(userRepository.save(user,traceId)).thenReturn(Mono.just(user));
 
         Mono<Void> result = userUseCase.saveUser(user,traceId);
@@ -67,7 +67,8 @@ class UserUseCaseTest {
                 .expectError(UserValidationException.class)
                 .verify();
 
-        verify(userRepository, never()).save(any(),traceId);
+        verify(userRepository, never()).save(any(), eq(traceId));
+        verify(userRepository, never()).findByEmail(anyString(), anyString());
     }
     @Test
     @DisplayName("Usuario encontrado por documento")

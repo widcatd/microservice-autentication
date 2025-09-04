@@ -1,7 +1,7 @@
 package co.com.autentication.usecase.user.exception;
 
 import co.com.autentication.model.user.User;
-import co.com.autentication.usecase.user.exceptionusecase.ExceptionUseCaseResponse;
+import co.com.autentication.model.exceptionusecase.ExceptionUseCaseResponse;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
