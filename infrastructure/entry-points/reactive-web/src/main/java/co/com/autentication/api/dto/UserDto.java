@@ -1,16 +1,16 @@
-package co.com.autentication.model.user;
+package co.com.autentication.api.dto;
+
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-
+@RequiredArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder(toBuilder = true)
-public class User {
+public class UserDto {
     private Long idUser;
     private String firstName;
     private String lastName;
