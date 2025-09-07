@@ -85,10 +85,45 @@ public class RouterRest {
                                     )
                             }
                     )
+            ),
+            @RouterOperation(
+                    path = "/api/v1/usuarios/findByEmail/{email}",
+                    produces = { MediaType.APPLICATION_JSON_VALUE },
+                    method = RequestMethod.GET,
+                    beanClass = Handler.class,
+                    beanMethod = "findByEmail",
+                    operation = @Operation(
+                            operationId = "findByEmail",
+                            summary = "Buscar un usuario por email",
+                            tags = { "Usuarios" },
+                            parameters = {
+                                    @Parameter(
+                                            name = "email",
+                                            in = ParameterIn.PATH,
+                                            required = true,
+                                            description = "Email del usuario",
+                                            example = "usuario@dominio.com"
+                                    )
+                            },
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "Usuario encontrado",
+                                            content = @Content(
+                                                    schema = @Schema(implementation = UserDto.class)
+                                            )
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "404",
+                                            description = "Usuario no encontrado"
+                                    )
+                            }
+                    )
             )
     })
     public RouterFunction<ServerResponse> routerFunction(Handler handler) {
         return route(GET("/api/v1/usuarios/findByDocument/{identityDocument}"),handler::findByDocument)
-                .andRoute(POST("/api/v1/usuarios/"), handler::saveUser);
+                .andRoute(POST("/api/v1/usuarios/"), handler::saveUser)
+                .andRoute(GET("/api/v1/usuarios/findByEmail/{email}"), handler::findByEmail);
     }
 }

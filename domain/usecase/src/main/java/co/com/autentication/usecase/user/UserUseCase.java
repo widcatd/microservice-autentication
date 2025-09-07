@@ -31,4 +31,9 @@ public class UserUseCase implements IUserServicePort {
     public Mono<User> findByDocument(String identityDocument, String traceId) {
         return userRepository.findByIdentityDocument(identityDocument, traceId);
     }
+
+    @Override
+    public Mono<User> findByEmail(String email, String traceId) {
+        return userRepository.findByEmail(email, traceId);
+    }
 }
