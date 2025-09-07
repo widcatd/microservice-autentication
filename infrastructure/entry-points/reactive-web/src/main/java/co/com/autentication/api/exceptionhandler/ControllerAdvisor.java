@@ -1,5 +1,8 @@
 package co.com.autentication.api.exceptionhandler;
 
+import co.com.autentication.model.exception.DataNotFoundException;
+import co.com.autentication.model.exception.InvalidCredentialsException;
+import co.com.autentication.model.exception.JwtAuthenticationException;
 import co.com.autentication.usecase.user.exception.DataAlreadyExistException;
 import co.com.autentication.usecase.user.exception.UserValidationException;
 import jakarta.validation.ConstraintViolation;
@@ -51,6 +54,39 @@ public class ControllerAdvisor {
                 request.path()
         );
 
+        return ServerResponse.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(errorResponse);
+    }
+    public Mono<ServerResponse> handleDataAlreadyExistsException(JwtAuthenticationException ex, ServerRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED,
+                ex.getCode(),
+                ex.getMessage(),
+                request.path()
+        );
+        return ServerResponse.status(HttpStatus.UNAUTHORIZED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(errorResponse);
+    }
+    public Mono<ServerResponse> handleDataAlreadyExistsException(DataNotFoundException ex, ServerRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                ex.getCode(),
+                ex.getMessage(),
+                request.path()
+        );
+        return ServerResponse.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(errorResponse);
+    }
+    public Mono<ServerResponse> handleDataAlreadyExistsException(InvalidCredentialsException ex, ServerRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                ex.getCode(),
+                ex.getMessage(),
+                request.path()
+        );
         return ServerResponse.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(errorResponse);

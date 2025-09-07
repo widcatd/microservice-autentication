@@ -2,6 +2,7 @@ package co.com.autentication.r2dbc.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -34,4 +35,10 @@ public class UserEntity {
     private BigDecimal salaryBase;
     @Column("documento_identidad")
     private String identityDocument;
+    @Column("password")
+    private String password;
+    @Column("id_role")
+    private Long idRole;
+    @Transient
+    private String roleName;
 }

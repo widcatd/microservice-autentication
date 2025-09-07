@@ -5,6 +5,7 @@ import co.com.autentication.api.exceptionhandler.ControllerAdvisor;
 import co.com.autentication.api.helper.IUserRequestMapper;
 import co.com.autentication.api.helper.IUserResponseMapper;
 import co.com.autentication.model.constants.Constants;
+import co.com.autentication.model.exception.JwtAuthenticationException;
 import co.com.autentication.usecase.user.api.IUserServicePort;
 import co.com.autentication.usecase.user.exception.DataAlreadyExistException;
 import co.com.autentication.usecase.user.exception.UserValidationException;
@@ -29,9 +30,6 @@ public class Handler {
     private final IUserResponseMapper userResponseMapper;
     private final ControllerAdvisor controllerAdvisor;
 
-    public Mono<ServerResponse> listenGETUseCase(ServerRequest serverRequest) {
-        return ServerResponse.ok().bodyValue("");
-    }
     @Operation(summary = "Crear un usuario")
     public Mono<ServerResponse> saveUser(ServerRequest serverRequest) {
         String traceId = serverRequest.headers().firstHeader("X-Trace-Id");
@@ -48,6 +46,8 @@ public class Handler {
                 .onErrorResume(DataAlreadyExistException.class, ex ->
                         controllerAdvisor.handleDataAlreadyExistsException(ex, serverRequest))
                 .onErrorResume(UserValidationException.class, ex ->
+                        controllerAdvisor.handleDataAlreadyExistsException(ex, serverRequest))
+                .onErrorResume(JwtAuthenticationException.class, ex ->
                         controllerAdvisor.handleDataAlreadyExistsException(ex, serverRequest));
     }
     @Operation(summary = "Buscar por documento")

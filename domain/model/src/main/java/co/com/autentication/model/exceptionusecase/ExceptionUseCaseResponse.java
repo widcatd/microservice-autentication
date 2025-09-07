@@ -1,4 +1,4 @@
-package co.com.autentication.usecase.user.exceptionusecase;
+package co.com.autentication.model.exceptionusecase;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,19 @@ public enum ExceptionUseCaseResponse {
     USER_EMAIL_INVALID("USR-008", "el formato de email es incorrecto"),
     USER_SALARY_NULL("USR-009", "el salario base no debe ser nulo"),
     USER_SALARY_MIN("USR-010", "el valor mínimo del salario base debe ser 0"),
-    USER_SALARY_MAX("USR-011", "el valor máximo del salario base debe ser 15000000");
+    USER_SALARY_MAX("USR-011", "el valor máximo del salario base debe ser 15000000"),
+
+    ROLE_ID_NOT_FOUND("ROL-001","No existe el id solicitud prestamo %d"),
+
+    EMAIL_NOT_FOUND("AUTH-001", "El email %s no se encuentra registrado"),
+    INVALID_CREDENTIALS("AUTH-002", "Las credenciales son inválidas, verifique su email o contraseña"),
+
+    JWT_TOKEN_NOT_FOUND("JWT-001", "El token no se encontró en la cabecera Authorization"),
+    JWT_TOKEN_INVALID("JWT-002", "El token enviado es inválido"),
+    JWT_TOKEN_EXPIRED("JWT-003", "El token ha expirado"),
+    JWT_TOKEN_UNSUPPORTED("JWT-004", "El formato del token no es soportado"),
+    JWT_TOKEN_MALFORMED("JWT-005", "El token está mal formado"),
+    JWT_UNAUTHORIZED("JWT-006", "No autorizado: se requiere un token válido para acceder a este recurso");
 
     private final String code;
     private final String message;

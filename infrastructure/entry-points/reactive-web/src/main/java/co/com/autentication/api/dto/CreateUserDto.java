@@ -27,4 +27,6 @@ public class CreateUserDto {
     @Schema(description = "Salario base", example = "2500.50")
     private BigDecimal salaryBase;
     private String identityDocument;
+    private Long idRole;
+    private String password;
 }

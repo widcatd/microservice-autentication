@@ -20,4 +20,7 @@ public class User {
     private String email;
     private BigDecimal salaryBase;
     private String identityDocument;
+    private Long idRole;
+    private String password;
+    private String role;
 }
