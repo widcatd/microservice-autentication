@@ -38,6 +38,7 @@ public class SecurityConfig {
                         .pathMatchers("/api/v1/auth/**").permitAll()
                         .pathMatchers("/api/v1/usuarios/").hasAnyRole("ADMINISTRADOR","ASESOR")
                         .pathMatchers("/api/v1/usuarios/findByDocument/**").hasRole("CLIENTE")
+                        .pathMatchers("/api/v1/usuarios/findByEmail/**").hasAnyRole("ADMINISTRADOR","ASESOR")
                         .anyExchange().denyAll())
                 .addFilterAfter(jwtFilter, SecurityWebFiltersOrder.FIRST)
                 .securityContextRepository(securityContextRepository)

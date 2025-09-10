@@ -21,6 +21,7 @@ import static org.mockito.Mockito.*;
 class UserUseCaseTest {
     private static final String IDENTITY_DOCUMENT ="123456";
     private static final String traceId= "74654859-d75f-448e-9b5e-a6ddee9f5278";
+    private static final String EMAIL = "prueba@example.com";
 
     @Mock
     private UserRepository userRepository;
@@ -91,6 +92,31 @@ class UserUseCaseTest {
                 .thenReturn(Mono.empty());
 
         Mono<User> result = userUseCase.findByDocument(IDENTITY_DOCUMENT, traceId);
+
+        StepVerifier.create(result)
+                .verifyComplete();
+    }
+    @Test
+    @DisplayName("Usuario encontrado por email")
+    void findByEmail_found() {
+        User user = UserMock.validUser();
+        when(userRepository.findByEmail(EMAIL,traceId))
+                .thenReturn(Mono.just(user));
+
+        Mono<User> result = userUseCase.findByEmail(EMAIL, traceId);
+
+        StepVerifier.create(result)
+                .expectNext(user)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Usuario no encontrado por email")
+    void findByEmail_notFound() {
+        when(userRepository.findByEmail(EMAIL,traceId))
+                .thenReturn(Mono.empty());
+
+        Mono<User> result = userUseCase.findByEmail(EMAIL, traceId);
 
         StepVerifier.create(result)
                 .verifyComplete();

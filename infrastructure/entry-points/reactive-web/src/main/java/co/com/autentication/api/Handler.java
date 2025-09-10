@@ -66,4 +66,19 @@ public class Handler {
                 .doOnSuccess(resp -> log.info(Constants.LOG_USER_RESPONSE_SENT, resp.statusCode(), traceId))
                 .doOnError(error -> log.error(Constants.LOG_USER_ERROR_PROCESSING, error.getMessage(), traceId, error));
     }
+
+    public Mono<ServerResponse> findByEmail(ServerRequest serverRequest) {
+        String email = serverRequest.pathVariable("email");
+        String traceId = serverRequest.headers().firstHeader("X-Trace-Id");
+        log.info(Constants.LOG_USER_FIND_BY_EMAIL, email, traceId);
+        return userServicePort.findByEmail(email, traceId)
+                .flatMap(user ->
+                        ServerResponse.ok()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .bodyValue(user)
+                )
+                .switchIfEmpty(ServerResponse.notFound().build())
+                .doOnSuccess(resp -> log.info(Constants.LOG_USER_RESPONSE_SENT, resp.statusCode(), traceId))
+                .doOnError(error -> log.error(Constants.LOG_USER_ERROR_PROCESSING, error.getMessage(), traceId, error));
+    }
 }
