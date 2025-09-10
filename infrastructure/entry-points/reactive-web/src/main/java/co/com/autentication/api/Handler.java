@@ -2,10 +2,9 @@ package co.com.autentication.api;
 
 import co.com.autentication.api.dto.CreateUserDto;
 import co.com.autentication.api.exceptionhandler.ControllerAdvisor;
-import co.com.autentication.api.helper.IUserRequestMapper;
-import co.com.autentication.api.helper.IUserResponseMapper;
 import co.com.autentication.model.constants.Constants;
 import co.com.autentication.model.exception.JwtAuthenticationException;
+import co.com.autentication.model.user.User;
 import co.com.autentication.usecase.user.api.IUserServicePort;
 import co.com.autentication.usecase.user.exception.DataAlreadyExistException;
 import co.com.autentication.usecase.user.exception.UserValidationException;
@@ -26,16 +25,14 @@ import reactor.core.publisher.Mono;
 @Tag(name = "Usuarios", description = "Operaciones sobre usuarios")
 public class Handler {
     private final IUserServicePort userServicePort;
-    private final IUserRequestMapper userRequestMapper;
-    private final IUserResponseMapper userResponseMapper;
     private final ControllerAdvisor controllerAdvisor;
 
     @Operation(summary = "Crear un usuario")
     public Mono<ServerResponse> saveUser(ServerRequest serverRequest) {
         String traceId = serverRequest.headers().firstHeader("X-Trace-Id");
         log.info(Constants.LOG_USER_REQUEST_RECEIVED, traceId);
-        return serverRequest.bodyToMono(CreateUserDto.class)
-                .flatMap(dto -> userServicePort.saveUser(userRequestMapper.toModel(dto), traceId))
+        return serverRequest.bodyToMono(User.class)
+                .flatMap(dto -> userServicePort.saveUser(dto, traceId))
                 .doOnSuccess(user -> log.info(Constants.LOG_USER_CREATED_SUCCESS, traceId))
                 .then(ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
@@ -56,7 +53,6 @@ public class Handler {
         String traceId = serverRequest.headers().firstHeader("X-Trace-Id");
         log.info(Constants.LOG_USER_FIND_BY_DOCUMENT, identityDocument, traceId);
         return userServicePort.findByDocument(identityDocument, traceId)
-                .map(userResponseMapper::toResponse)
                 .flatMap(userResponseDto ->
                         ServerResponse.ok()
                                 .contentType(MediaType.APPLICATION_JSON)
