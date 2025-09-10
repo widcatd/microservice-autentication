@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${PORT_AUTH}
 spring:
   application:
     name: "Autentication"
@@ -21,16 +21,16 @@ management:
       probes:
         enabled: true
 cors:
-  allowed-origins: "http://localhost:4200,http://localhost:8080"
+  allowed-origins: "http://localhost:4200,http://localhost:${PORT_AUTH}"
 adapters:
   r2dbc:
-    host: localhost
-    port: 5436
-    database: autentication
+    host: ${DB_AUTH_HOST}
+    port: ${DB_AUTH_PORT}
+    database: ${DB_AUTH_NAME}
     schema: public
-    username: postgres
-    password: mysecretpassword
+    username: ${DB_AUTH_USER}
+    password: ${DB_AUTH_PASSWORD}
 
 jwt:
-  secret: 6b1a96e1560e4560c59fd70326cd02d5d550dd3d648aae7259ca4de77901c0bc
-  expiration: 3600000
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
